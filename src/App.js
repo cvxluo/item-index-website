@@ -15,7 +15,7 @@ class App extends React.Component {
         item_ref.get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
                 const docID = doc.id;
                 const docData = doc.data();
 
@@ -26,6 +26,16 @@ class App extends React.Component {
                 this.setState({
                     items : retrieved_items,
                 });
+            }
+        );
+
+        const stats_ref = firestore.collection('stats').doc('website');
+        stats_ref.get().then(
+            (stats_snapshot) => {
+                const total_visits = stats_snapshot.data()['visits']
+                console.log("Total visits: ", total_visits);
+
+                stats_ref.set({ visits : total_visits + 1 });
             }
         );
 
@@ -52,7 +62,6 @@ class App extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log("TRYING TO SUBMIT");
 
         const firestore = this.props.firebase.firestore;
         const docRef = firestore.collection('test').doc(this.state.input_value);
@@ -93,7 +102,6 @@ class App extends React.Component {
             }
         );
 
-        console.log(this.state.items);
 
         return (
             <div>
@@ -116,7 +124,6 @@ class App extends React.Component {
                 </div>
                 <ol>
                     {display_items}
-
                 </ol>
             </div>
         );
