@@ -1,16 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import { FirebaseContext } from './components/Firebase'
 
 class App extends React.Component {
 
+    componentDidMount() {
+
+        const firestore = this.props.firebase.firestore;
+        const item_ref = firestore.collection('items');
+
+        var retrieved_items = {};
+
+        item_ref.get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                // doc.data() is never undefined for query doc snapshots
+                console.log(doc.id, " => ", doc.data());
+                const docID = doc.id;
+                const docData = doc.data();
+
+                retrieved_items[docID] = docData;
+            });
+        }).then(
+            () => {
+                this.setState({
+                    items : retrieved_items,
+                });
+            }
+        );
+
+    }
+
     constructor(props) {
         super(props);
         this.state = {
             input_value: "",
             fb_value: "nothing to note",
+            items: {},
         };
 
         this.input_updated = this.input_updated.bind(this);
@@ -55,6 +81,20 @@ class App extends React.Component {
     }
 
     render() {
+
+        const all_items = this.state.items;
+        const display_items = Object.keys(all_items).map(
+            (item_key, index) => {
+                return (
+                  <li key={item_key}>
+                    <p>{item_key}</p>
+                  </li>
+                );
+            }
+        );
+
+        console.log(this.state.items);
+
         return (
             <div>
                 <div className = "test">
@@ -74,24 +114,10 @@ class App extends React.Component {
                 <div>
                     <p>{this.state.fb_value}</p>
                 </div>
+                <ol>
+                    {display_items}
 
-
-                <div className="App">
-                  <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <p>
-                      Edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <a
-                      className="App-link"
-                      href="https://reactjs.org"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Learn React
-                    </a>
-                  </header>
-                </div>
+                </ol>
             </div>
         );
     }
