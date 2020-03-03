@@ -1,7 +1,14 @@
 import React from 'react';
 import './App.css';
 
-import { FirebaseContext } from './components/Firebase'
+import { FirebaseContext } from './components/Firebase';
+import algoliasearch from 'algoliasearch';
+
+import SearchBar from './components/SearchBar';
+
+const client = algoliasearch('YLEE8RLU7T', process.env.REACT_APP_ALGOLIA_SECRET);
+const index = client.initIndex('monumenta-item-index');
+
 
 class App extends React.Component {
 
@@ -44,27 +51,26 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            input_value: "",
-            fb_value: "nothing to note",
+            search_value: "",
             items: {},
         };
 
-        this.input_updated = this.input_updated.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    input_updated(event) {
+    handleChange(event) {
         this.setState({
-            input_value: event.target.value,
+            search_value: event.target.value,
         });
-        console.log(this.state.input_value);
+        console.log(event.target.value);
     }
 
     handleSubmit(event) {
         event.preventDefault();
 
         const firestore = this.props.firebase.firestore;
-        const docRef = firestore.collection('test').doc(this.state.input_value);
+        const docRef = firestore.collection('test').doc(this.state.search_value);
 
         let data;
         docRef.get().then(doc => {
@@ -86,7 +92,6 @@ class App extends React.Component {
             data = "Error retrieving document!";
         });
 
-
     }
 
     render() {
@@ -106,21 +111,10 @@ class App extends React.Component {
         return (
             <div>
                 <div className = "test">
-                    <form onSubmit={this.handleSubmit}>
-                      <label>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Test"
-                            onChange={this.input_updated}
-                            value={this.state.input_value}
-                            />
-                      </label>
-                      <button type="submit">Submit</button>
-                    </form>
-                </div>
-                <div>
-                    <p>{this.state.fb_value}</p>
+                    <SearchBar
+                        onChange={(e) => this.handleChange(e)}
+                        value={this.state.search_value}
+                        />
                 </div>
                 <ol>
                     {display_items}
