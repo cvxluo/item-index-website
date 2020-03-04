@@ -1,14 +1,7 @@
 import React from 'react';
 import './App.css';
 
-import { FirebaseContext } from './components/Firebase';
-import algoliasearch from 'algoliasearch';
-
 import SearchBar from './components/SearchBar';
-
-const client = algoliasearch('YLEE8RLU7T', process.env.REACT_APP_ALGOLIA_SECRET);
-const index = client.initIndex('monumenta-item-index');
-
 
 class App extends React.Component {
 
@@ -49,6 +42,21 @@ class App extends React.Component {
             }
         );
 
+
+
+        // Initially load all results
+        const search_index = this.props.algolia.algolia_index;
+        search_index.search(
+            '',
+            {
+                hitsPerPage: 1000,
+            }
+        ).then((responses) => {
+            this.setState({
+                items_displayed: responses.hits,
+            });
+        });
+
     }
 
     constructor(props) {
@@ -69,7 +77,8 @@ class App extends React.Component {
         });
         console.log(event.target.value);
 
-        index.search(
+        const search_index = this.props.algolia.algolia_index;
+        search_index.search(
             event.target.value,
             {
                 hitsPerPage: 50,
