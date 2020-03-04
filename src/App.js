@@ -17,6 +17,8 @@ class App extends React.Component {
         const firestore = this.props.firebase.firestore;
         const item_ref = firestore.collection('items');
 
+        /*
+
         var retrieved_items = {};
 
         item_ref.get().then(function(querySnapshot) {
@@ -35,6 +37,7 @@ class App extends React.Component {
                 });
             }
         );
+        */
 
         const stats_ref = firestore.collection('stats').doc('website');
         stats_ref.get().then(
@@ -53,6 +56,7 @@ class App extends React.Component {
         this.state = {
             search_value: "",
             items: {},
+            items_displayed: [],
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -64,6 +68,20 @@ class App extends React.Component {
             search_value: event.target.value,
         });
         console.log(event.target.value);
+
+        index.search(
+            event.target.value,
+            {
+                hitsPerPage: 50,
+            }
+        ).then((responses) => {
+            // Response from Algolia:
+            // https://www.algolia.com/doc/api-reference/api-methods/search/#response-format
+            console.log(responses.hits);
+            this.setState({
+                items_displayed: responses.hits,
+            });
+        });
     }
 
     handleSubmit(event) {
@@ -96,12 +114,12 @@ class App extends React.Component {
 
     render() {
 
-        const all_items = this.state.items;
-        const display_items = Object.keys(all_items).map(
-            (item_key, index) => {
+        const to_display = this.state.items_displayed;
+        const display_item_names = to_display.map(
+            (item, i) => {
                 return (
-                  <li key={item_key}>
-                    <p>{item_key}</p>
+                  <li key={i}>
+                    <p>{item['name']}</p>
                   </li>
                 );
             }
@@ -117,7 +135,7 @@ class App extends React.Component {
                         />
                 </div>
                 <ol>
-                    {display_items}
+                    {display_item_names}
                 </ol>
             </div>
         );
