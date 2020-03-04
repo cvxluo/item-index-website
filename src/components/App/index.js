@@ -1,29 +1,27 @@
 import React from 'react';
 import {
   BrowserRouter as Router,
+  Switch,
   Route,
 } from 'react-router-dom';
 
-import Navigation from '../Navigation';
-
+import Home from '../Home';
 import Search from '../Search';
 import AddItem from '../AddItem';
 
 import * as ROUTES from '../../constants/routes';
 
 function App(props) {
-
-    console.log("DO I HAVE FIREBASE");
-    console.log(props);
     return (
         <Router>
-          <div>
-            <Navigation />
-            <hr />
-            <Route exact path={ROUTES.LANDING} component={Search} />
-            <Route path={ROUTES.SEARCH} component={Search} />
-            <Route path={ROUTES.ADD_ITEM} component={AddItem} />
-          </div>
+            <div>
+                <hr />
+                <Switch>
+                    <Route path={ROUTES.HOME} component={Home} />
+                    <Route path={ROUTES.SEARCH} component={Search} />
+                    <Route path={ROUTES.ADD_ITEM} component={AddItem} />
+                </Switch>
+            </div>
         </Router>
     );
 }

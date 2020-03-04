@@ -1,6 +1,8 @@
 import React from 'react';
 import './Search.css';
 
+import { withRouter } from 'react-router-dom';
+
 import { withFirebase } from '../Firebase';
 import { withAlgolia } from '../Algolia';
 
@@ -9,12 +11,6 @@ import SearchBar from '../SearchBar';
 class Search extends React.Component {
 
     componentDidMount() {
-
-        console.log("PROPS");
-        console.log(this.props);
-
-        console.log("PROPS FROM ROUTER");
-        console.log(this.props.route);
 
         const firestore = this.props.firebase.firestore;
         const item_ref = firestore.collection('items');
@@ -160,6 +156,6 @@ class Search extends React.Component {
     }
 }
 
-const SearchPage = withFirebase(withAlgolia(Search));
+const SearchPage = withRouter(withFirebase(withAlgolia(Search)));
 
 export default SearchPage;
