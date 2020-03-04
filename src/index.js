@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
-import App from './App';
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
 import Firebase, { FirebaseContext } from './components/Firebase';
@@ -11,13 +11,7 @@ import Algolia, { AlgoliaContext } from './components/Algolia';
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>
       <AlgoliaContext.Provider value={new Algolia()}>
-          <FirebaseContext.Consumer>
-              { firebase =>
-                  <AlgoliaContext.Consumer>
-                      { algolia => <App firebase={firebase} algolia={algolia} /> }
-                  </AlgoliaContext.Consumer>
-              }
-          </FirebaseContext.Consumer>
+            <App />
       </AlgoliaContext.Provider>
   </FirebaseContext.Provider>,
   document.getElementById('root'),

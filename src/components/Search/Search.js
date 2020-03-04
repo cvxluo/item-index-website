@@ -1,11 +1,20 @@
 import React from 'react';
-import './App.css';
+import './Search.css';
 
-import SearchBar from './components/SearchBar';
+import { withFirebase } from '../Firebase';
+import { withAlgolia } from '../Algolia';
 
-class App extends React.Component {
+import SearchBar from '../SearchBar';
+
+class Search extends React.Component {
 
     componentDidMount() {
+
+        console.log("PROPS");
+        console.log(this.props);
+
+        console.log("PROPS FROM ROUTER");
+        console.log(this.props.route);
 
         const firestore = this.props.firebase.firestore;
         const item_ref = firestore.collection('items');
@@ -151,4 +160,6 @@ class App extends React.Component {
     }
 }
 
-export default App;
+const SearchPage = withFirebase(withAlgolia(Search));
+
+export default SearchPage;
