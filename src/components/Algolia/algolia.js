@@ -1,5 +1,4 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore';
+import algoliasearch from 'algoliasearch';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -10,12 +9,12 @@ const config = {
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
 };
 
-class Firebase {
+class Algolia {
     constructor() {
-        firebase.initializeApp(config);
 
-        this.firestore = firebase.firestore();
+        this.algolia_client = algoliasearch('YLEE8RLU7T', process.env.REACT_APP_ALGOLIA_SECRET);
+        this.algolia_index = this.algolia_client.initIndex('monumenta-item-index');
 
     }
 }
-export default Firebase;
+export default Algolia;

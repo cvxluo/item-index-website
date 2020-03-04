@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-import { FirebaseContext } from './components/Firebase'
+import SearchBar from './components/SearchBar';
 
 class App extends React.Component {
 
@@ -9,6 +9,8 @@ class App extends React.Component {
 
         const firestore = this.props.firebase.firestore;
         const item_ref = firestore.collection('items');
+
+        /*
 
         var retrieved_items = {};
 
@@ -28,6 +30,7 @@ class App extends React.Component {
                 });
             }
         );
+        */
 
         const stats_ref = firestore.collection('stats').doc('website');
         stats_ref.get().then(
@@ -39,32 +42,62 @@ class App extends React.Component {
             }
         );
 
+
+
+        // Initially load all results
+        const search_index = this.props.algolia.algolia_index;
+        search_index.search(
+            '',
+            {
+                hitsPerPage: 1000,
+            }
+        ).then((responses) => {
+            this.setState({
+                items_displayed: responses.hits,
+            });
+        });
+
     }
 
     constructor(props) {
         super(props);
         this.state = {
-            input_value: "",
-            fb_value: "nothing to note",
+            search_value: "",
             items: {},
+            items_displayed: [],
         };
 
-        this.input_updated = this.input_updated.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    input_updated(event) {
+    handleChange(event) {
         this.setState({
-            input_value: event.target.value,
+            search_value: event.target.value,
         });
-        console.log(this.state.input_value);
+        console.log(event.target.value);
+
+        const search_index = this.props.algolia.algolia_index;
+        search_index.search(
+            event.target.value,
+            {
+                hitsPerPage: 50,
+            }
+        ).then((responses) => {
+            // Response from Algolia:
+            // https://www.algolia.com/doc/api-reference/api-methods/search/#response-format
+            console.log(responses.hits);
+            this.setState({
+                items_displayed: responses.hits,
+            });
+        });
     }
 
     handleSubmit(event) {
         event.preventDefault();
 
         const firestore = this.props.firebase.firestore;
-        const docRef = firestore.collection('test').doc(this.state.input_value);
+        const docRef = firestore.collection('test').doc(this.state.search_value);
 
         let data;
         docRef.get().then(doc => {
@@ -86,17 +119,16 @@ class App extends React.Component {
             data = "Error retrieving document!";
         });
 
-
     }
 
     render() {
 
-        const all_items = this.state.items;
-        const display_items = Object.keys(all_items).map(
-            (item_key, index) => {
+        const to_display = this.state.items_displayed;
+        const display_item_names = to_display.map(
+            (item, i) => {
                 return (
-                  <li key={item_key}>
-                    <p>{item_key}</p>
+                  <li key={i}>
+                    <p>{item['name']}</p>
                   </li>
                 );
             }
@@ -106,24 +138,13 @@ class App extends React.Component {
         return (
             <div>
                 <div className = "test">
-                    <form onSubmit={this.handleSubmit}>
-                      <label>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Test"
-                            onChange={this.input_updated}
-                            value={this.state.input_value}
-                            />
-                      </label>
-                      <button type="submit">Submit</button>
-                    </form>
-                </div>
-                <div>
-                    <p>{this.state.fb_value}</p>
+                    <SearchBar
+                        onChange={(e) => this.handleChange(e)}
+                        value={this.state.search_value}
+                        />
                 </div>
                 <ol>
-                    {display_items}
+                    {display_item_names}
                 </ol>
             </div>
         );
