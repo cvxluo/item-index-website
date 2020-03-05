@@ -1,12 +1,18 @@
 import React from 'react';
 import './Search.css';
 
-import { withRouter } from 'react-router-dom';
+import {
+    Link,
+    withRouter,
+} from 'react-router-dom';
 
 import { withFirebase } from '../Firebase';
 import { withAlgolia } from '../Algolia';
 
-import SearchBar from '../SearchBar';
+import SearchBar from './SearchBar';
+
+import * as ROUTES from '../../constants/routes';
+
 
 class Search extends React.Component {
 
@@ -142,15 +148,28 @@ class Search extends React.Component {
 
         return (
             <div>
-                <div className = "test">
-                    <SearchBar
-                        onChange={(e) => this.handleChange(e)}
-                        value={this.state.search_value}
-                        />
+                <div>
+                    <ul>
+                        <li>
+                            <Link to={ROUTES.HOME}>Home</Link>
+                        </li>
+                        <li>
+                            <Link to={ROUTES.ADD_ITEM}>Add item</Link>
+                        </li>
+                    </ul>
                 </div>
-                <ol>
-                    {display_item_names}
-                </ol>
+
+                <div>
+                    <div className = "test">
+                        <SearchBar
+                            onChange={(e) => this.handleChange(e)}
+                            value={this.state.search_value}
+                            />
+                    </div>
+                    <ol>
+                        {display_item_names}
+                    </ol>
+                </div>
             </div>
         );
     }

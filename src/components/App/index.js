@@ -17,9 +17,9 @@ function App(props) {
             <div>
                 <hr />
                 <Switch>
-                    <Route path={ROUTES.HOME} component={Home} />
                     <Route path={ROUTES.SEARCH} component={Search} />
                     <Route path={ROUTES.ADD_ITEM} component={AddItem} />
+                    <Route path={ROUTES.HOME} component={Home} />
                 </Switch>
             </div>
         </Router>
