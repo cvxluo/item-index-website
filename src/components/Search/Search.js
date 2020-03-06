@@ -10,6 +10,7 @@ import { withFirebase } from '../Firebase';
 import { withAlgolia } from '../Algolia';
 
 import SearchBar from './SearchBar';
+import ItemPage from './ItemPage';
 
 import * as ROUTES from '../../constants/routes';
 
@@ -139,7 +140,14 @@ class Search extends React.Component {
             (item, i) => {
                 return (
                   <li key={i}>
-                    <p>{item['name']}</p>
+                    <Link to={{
+                        pathname:`${ROUTES.SEARCH}/${item['name']}`,
+                        state : {
+                            item_info : item,
+                        },
+                    }}>
+                    {item['name']}
+                    </Link>
                   </li>
                 );
             }
@@ -171,6 +179,7 @@ class Search extends React.Component {
                     </ol>
                 </div>
             </div>
+
         );
     }
 }
