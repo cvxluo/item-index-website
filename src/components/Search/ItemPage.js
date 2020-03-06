@@ -36,6 +36,12 @@ function ItemPage(props) {
             <Link to={ROUTES.SEARCH}>Back</Link>
 
             <p> { item_name } </p>
+            <Link to={{
+                pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
+                state : {
+                    item_info : item_info,
+                },
+            }}>Edit</Link>
             <ol>
                 {tag_display}
             </ol>

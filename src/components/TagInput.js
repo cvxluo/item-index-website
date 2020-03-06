@@ -3,6 +3,8 @@ import React from 'react'
 function TagInput(props) {
 
     const tag_inputs = props.tags;
+
+    console.log(tag_inputs);
     const tag_boxes = tag_inputs.map(
         (tag, i) => {
             return (

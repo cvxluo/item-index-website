@@ -10,7 +10,6 @@ import { withFirebase } from '../Firebase';
 import { withAlgolia } from '../Algolia';
 
 import SearchBar from './SearchBar';
-import ItemPage from './ItemPage';
 
 import * as ROUTES from '../../constants/routes';
 
@@ -20,9 +19,8 @@ class Search extends React.Component {
     componentDidMount() {
 
         const firestore = this.props.firebase.firestore;
-        const item_ref = firestore.collection('items');
-
         /*
+        const item_ref = firestore.collection('items');
 
         var retrieved_items = {};
 
@@ -80,7 +78,6 @@ class Search extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(event) {
@@ -105,33 +102,6 @@ class Search extends React.Component {
         });
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
-
-        const firestore = this.props.firebase.firestore;
-        const docRef = firestore.collection('test').doc(this.state.search_value);
-
-        let data;
-        docRef.get().then(doc => {
-            if (doc.exists) {
-                data = doc.data();
-                console.log("Document data:", doc.data());
-
-                this.setState({
-                    fb_value: data['testfield'],
-                });
-
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
-                    data = "No such document!";
-                }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-            data = "Error retrieving document!";
-        });
-
-    }
 
     render() {
 

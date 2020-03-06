@@ -13,34 +13,41 @@ import TagInput from '../TagInput';
 import * as ROUTES from '../../constants/routes';
 
 
-class AddItem extends React.Component {
+class EditItem extends React.Component {
 
     constructor(props) {
         super(props);
+
+        const { item_info } = props.location.state;
+
+        console.log(item_info);
+
+        const item_tags = Object.keys(item_info['tags']).map(
+            (tag_type) => {
+                return {
+                    'type': tag_type,
+                    'attribute': item_info['tags'][tag_type],
+                }
+            }
+        )
+        console.log("ITEM TAGS ", item_tags);
+
         this.state = {
-            item_name : '',
+            item_name : item_info['name'],
             url: '',
 
+            objectID : item_info['objectID'],
+
             // Tags are structured as dicts inside a list - each dict contains the type and attribute of a tag
-            tags : [],
+            tags : item_tags,
         };
 
-        this.handleChange = this.handleChange.bind(this);
         this.handleTagChange = this.handleTagChange.bind(this);
         this.handleTagDelete = this.handleTagDelete.bind(this);
         this.addTagSlot = this.addTagSlot.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
-        const target = event.target;
-        const input_name = target.name;
-
-        this.setState({
-            [input_name]: target.value,
-        });
-
-    }
 
     handleTagChange(event, tag_index) {
         const target = event.target;
@@ -95,53 +102,33 @@ class AddItem extends React.Component {
             'tags': item_tags,
         }
 
-
         const firestore = this.props.firebase.firestore;
         const item_ref = firestore.collection('items');
-        item_ref.doc(item_name).set(item);
+        item_ref.doc(item_name).update(item);
 
+
+
+        const algolia_item = {
+            ...item,
+            'objectID': this.state.objectID,
+        }
 
         const algolia = this.props.algolia.algolia_index;
-        algolia.saveObjects([item], { autoGenerateObjectIDIfNotExist: true });
-
+        algolia.partialUpdateObjects([algolia_item]);
 
     }
 
 
     render() {
 
-        console.log(this.state.tags);
         return (
             <div>
-                <div>
-                    <ul>
-                        <li>
-                            <Link to={ROUTES.SEARCH}>Back</Link>
-                        </li>
-                    </ul>
-                </div>
+                <Link to={ROUTES.SEARCH}>Back</Link>
+                <p>Warning: your changes won't be saved</p>
+
+                <p>Changing: {this.state.item_name}</p>
 
                 <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Item name:
-                        <input
-                            type='text'
-                            value={this.state.item_name}
-                            name='item_name'
-                            onChange={this.handleChange}
-                            />
-                    </label>
-                    <br />
-                    <label>
-                        Item image url:
-                        <input
-                            type='text'
-                            value={this.state.url}
-                            name='url'
-                            onChange={this.handleChange}
-                            />
-                    </label>
-                    <br />
 
                     <TagInput
                         tags={this.state.tags}
@@ -150,14 +137,14 @@ class AddItem extends React.Component {
                         handleTagDelete={this.handleTagDelete}
                         />
 
-                    <br />
                     <input type='submit' value='Submit'/>
                 </form>
+
             </div>
         );
     }
 }
 
-const AddItemPage = withRouter(withFirebase(withAlgolia(AddItem)));
+const EditItemPage = withRouter(withFirebase(withAlgolia(EditItem)));
 
-export default AddItemPage;
+export default EditItemPage;
