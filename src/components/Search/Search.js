@@ -6,8 +6,8 @@ import {
     withRouter,
 } from 'react-router-dom';
 
-import { withFirebase } from '../Firebase';
-import { withAlgolia } from '../Algolia';
+import { withFirebase } from '../backend/Firebase';
+import { withAlgolia } from '../backend/Algolia';
 
 import SearchBar from './SearchBar';
 

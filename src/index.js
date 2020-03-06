@@ -5,8 +5,8 @@ import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
-import Firebase, { FirebaseContext } from './components/Firebase';
-import Algolia, { AlgoliaContext } from './components/Algolia';
+import Firebase, { FirebaseContext } from './components/backend/Firebase';
+import Algolia, { AlgoliaContext } from './components/backend/Algolia';
 
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>
