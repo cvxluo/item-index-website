@@ -37,6 +37,7 @@ class EditItem extends React.Component {
             url: '',
 
             objectID : item_info['objectID'],
+            deleteDisplay: 'Delete',
 
             // Tags are structured as dicts inside a list - each dict contains the type and attribute of a tag
             tags : item_tags,
@@ -46,6 +47,31 @@ class EditItem extends React.Component {
         this.handleTagDelete = this.handleTagDelete.bind(this);
         this.addTagSlot = this.addTagSlot.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+    }
+
+    handleDelete(event) {
+        event.preventDefault();
+
+        const item_name = this.state.item_name;
+        const tags = this.state.tags;
+
+        if (this.state.deleteDisplay === 'Delete') {
+            this.setState({ deleteDisplay: 'Are you sure you want to delete this item?' })
+        }
+
+        else if (this.state.deleteDisplay === 'Are you sure you want to delete this item?') {
+            const firestore = this.props.firebase.firestore;
+            const item_ref = firestore.collection('items');
+            item_ref.doc(item_name).delete();
+            // Maybe catch errors
+
+            const algolia = this.props.algolia.algolia_index;
+            algolia.deleteObject(this.state.objectID);
+
+            this.props.history.push(ROUTES.SEARCH);
+        }
+
     }
 
 
@@ -127,6 +153,8 @@ class EditItem extends React.Component {
                 <p>Warning: your changes won't be saved</p>
 
                 <p>Changing: {this.state.item_name}</p>
+
+                <button onClick={this.handleDelete}>{this.state.deleteDisplay}</button>
 
                 <form onSubmit={this.handleSubmit}>
 
