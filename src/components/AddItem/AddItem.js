@@ -24,6 +24,7 @@ class AddItem extends React.Component {
             // Tags are structured as dicts inside a list - each dict contains the type and attribute of a tag
             tags : [],
         };
+        this.imageInput = React.createRef();
 
         this.handleChange = this.handleChange.bind(this);
         this.handleTagChange = this.handleTagChange.bind(this);
@@ -95,6 +96,19 @@ class AddItem extends React.Component {
             'tags': item_tags,
         }
 
+        console.log(this.imageInput.current.files[0]);
+        const file = this.imageInput.current.files[0];
+
+        const storage = this.props.firebase.storage;
+        const image_url = 'item-images/' + item_name;
+        const image_ref = storage.ref().child(image_url);
+
+        var metadata = { contentType: 'image/png' };
+
+        console.log(image_ref);
+
+        image_ref.put(file, metadata);
+
 
         const firestore = this.props.firebase.firestore;
         const item_ref = firestore.collection('items');
@@ -103,6 +117,7 @@ class AddItem extends React.Component {
 
         const algolia = this.props.algolia.algolia_index;
         algolia.saveObjects([item], { autoGenerateObjectIDIfNotExist: true });
+
 
 
     }
@@ -133,12 +148,10 @@ class AddItem extends React.Component {
                     </label>
                     <br />
                     <label>
-                        Item image url:
+                        Item image (please try to get this from the resource pack):
                         <input
-                            type='text'
-                            value={this.state.url}
-                            name='url'
-                            onChange={this.handleChange}
+                            type='file'
+                            ref={this.imageInput}
                             />
                     </label>
                     <br />

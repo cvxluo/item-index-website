@@ -18,7 +18,8 @@ class EditItem extends React.Component {
     constructor(props) {
         super(props);
 
-        const { item_info } = props.location.state;
+        const item_info = props.location.state.item_info;
+        const item_imageURL = props.location.state.item_imageURL;
 
         console.log(item_info);
 
@@ -34,7 +35,7 @@ class EditItem extends React.Component {
 
         this.state = {
             item_name : item_info['name'],
-            url: '',
+            url: item_imageURL,
 
             objectID : item_info['objectID'],
             deleteDisplay: 'Delete',
@@ -42,6 +43,8 @@ class EditItem extends React.Component {
             // Tags are structured as dicts inside a list - each dict contains the type and attribute of a tag
             tags : item_tags,
         };
+
+        this.imageInput = React.createRef();
 
         this.handleTagChange = this.handleTagChange.bind(this);
         this.handleTagDelete = this.handleTagDelete.bind(this);
@@ -68,6 +71,18 @@ class EditItem extends React.Component {
 
             const algolia = this.props.algolia.algolia_index;
             algolia.deleteObject(this.state.objectID);
+
+
+
+            const file = this.imageInput.current.files[0];
+
+            const storage = this.props.firebase.storage;
+            const image_url = 'item-images/' + item_name;
+            const image_ref = storage.ref().child(image_url);
+
+            console.log(image_ref);
+
+            image_ref.delete();
 
             this.props.history.push(ROUTES.SEARCH);
         }
@@ -133,7 +148,6 @@ class EditItem extends React.Component {
         item_ref.doc(item_name).update(item);
 
 
-
         const algolia_item = {
             ...item,
             'objectID': this.state.objectID,
@@ -141,6 +155,22 @@ class EditItem extends React.Component {
 
         const algolia = this.props.algolia.algolia_index;
         algolia.partialUpdateObjects([algolia_item]);
+
+
+        console.log(this.imageInput.current);
+        if (this.imageInput.current.files[0]) {
+            const file = this.imageInput.current.files[0];
+
+            const storage = this.props.firebase.storage;
+            const image_url = 'item-images/' + item_name;
+            const image_ref = storage.ref().child(image_url);
+
+            var metadata = { contentType: 'image/png' };
+
+            console.log(image_ref);
+
+            image_ref.put(file, metadata);
+        }
 
     }
 
@@ -154,7 +184,18 @@ class EditItem extends React.Component {
 
                 <p>Changing: {this.state.item_name}</p>
 
-                <button onClick={this.handleDelete}>{this.state.deleteDisplay}</button>
+                <img
+                    src={this.state.url}
+                    alt={this.props.item_name}
+                    />
+
+                <label>
+                    Item image (please try to get this from the resource pack):
+                    <input
+                        type='file'
+                        ref={this.imageInput}
+                        />
+                </label>
 
                 <form onSubmit={this.handleSubmit}>
 
@@ -166,6 +207,9 @@ class EditItem extends React.Component {
                         />
 
                     <input type='submit' value='Submit'/>
+                    <br />
+
+                    <button onClick={this.handleDelete}>{this.state.deleteDisplay}</button>
                 </form>
 
             </div>

@@ -4,51 +4,100 @@ import {
     useParams,
 } from 'react-router-dom';
 
+import { withFirebase } from './backend/Firebase';
+
 import * as ROUTES from '../constants/routes';
 
+class ItemPage extends React.Component {
 
-function ItemPage(props) {
+    componentDidMount() {
+
+        const storage = this.props.firebase.storage;
+        const url = 'item-images/' + this.props.itemID;
+        const image_ref = storage.ref().child(url);
+
+        image_ref.getDownloadURL().then(
+            (url) => {
+                this.setState({
+                    image_url: url,
+                });
+            }
+        );
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            image_url: '',
+        }
+    }
+
+    render() {
+
+        const item_name = this.props.itemID;
+        const item_tags = this.props.item_info['tags'];
+        const tag_display = Object.keys(item_tags).map(
+            (tag_type, i) => {
+                return (
+                    <li key={i}>
+                        <p>{tag_type} : {item_tags[tag_type]}</p>
+                    </li>
+                );
+            }
+        );
+
+        console.log("PROPS ", this.props);
+        console.log(this.props.item_info);
+
+
+        console.log("IN ITEM PAGE");
+        console.log(this.props.itemID);
+
+
+        return (
+            <div>
+                <Link to={ROUTES.SEARCH}>Back</Link>
+
+                <img
+                    src={this.state.image_url}
+                    alt={this.props.item_name}
+                    />
+
+                <p> { this.props.item_name } </p>
+                <Link to={{
+                    pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
+                    state : {
+                        item_info : this.props.item_info,
+                        item_imageURL: this.state.image_url,
+                    },
+                }}>Edit</Link>
+                <ol>
+                    {tag_display}
+                </ol>
+            </div>
+        );
+    }
+
+}
+
+const ItemPageBackend = withFirebase(ItemPage);
+
+
+function ItemPageRouter(props) {
 
     const { itemID } = useParams();
     const { item_info } = props.location.state;
 
-    const item_name = itemID;
-    const item_tags = item_info['tags'];
-    const tag_display = Object.keys(item_tags).map(
-        (tag_type, i) => {
-            return (
-                <li key={i}>
-                    <p>{tag_type} : {item_tags[tag_type]}</p>
-                </li>
-            );
-        }
-    );
-
-
-
-    console.log(item_info);
-
-
-    console.log("IN ITEM PAGE");
-    console.log(itemID);
     return (
-        <div>
-            <Link to={ROUTES.SEARCH}>Back</Link>
-
-            <p> { item_name } </p>
-            <Link to={{
-                pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
-                state : {
-                    item_info : item_info,
-                },
-            }}>Edit</Link>
-            <ol>
-                {tag_display}
-            </ol>
-        </div>
-
-
+        <ItemPageBackend
+            itemID={itemID}
+            item_info={item_info}
+            />
     );
+
 }
 
-export default ItemPage;
+
+
+
+export default ItemPageRouter;
