@@ -22,6 +22,14 @@ class ItemPage extends React.Component {
                     image_url: url,
                 });
             }
+        ).catch(
+            (err) => {
+                console.log("Item has no image");
+                this.setState({
+                    image_url: '/image-placeholder.png',
+                })
+
+            }
         );
     }
 
@@ -60,10 +68,10 @@ class ItemPage extends React.Component {
 
                 <img
                     src={this.state.image_url}
-                    alt={this.props.item_name}
+                    alt={item_name}
                     />
 
-                <p> { this.props.item_name } </p>
+                <p> { item_name } </p>
                 <Link to={{
                     pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
                     state : {

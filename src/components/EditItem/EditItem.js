@@ -158,7 +158,7 @@ class EditItem extends React.Component {
 
 
         console.log(this.imageInput.current);
-        if (this.imageInput.current.files[0]) {
+        if (this.imageInput.current.files[0] !== undefined) {
             const file = this.imageInput.current.files[0];
 
             const storage = this.props.firebase.storage;
@@ -171,6 +171,9 @@ class EditItem extends React.Component {
 
             image_ref.put(file, metadata);
         }
+
+        this.props.history.push(ROUTES.SEARCH);
+
 
     }
 

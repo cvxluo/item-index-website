@@ -21,6 +21,8 @@ class AddItem extends React.Component {
             item_name : '',
             url: '',
 
+            error_state: '',
+
             // Tags are structured as dicts inside a list - each dict contains the type and attribute of a tag
             tags : [],
         };
@@ -84,6 +86,11 @@ class AddItem extends React.Component {
         event.preventDefault();
 
         const item_name = this.state.item_name;
+
+        if (!item_name) {
+            this.setState({ error_state: 'Item must have a name!' });
+            return;
+        }
         const tags = this.state.tags;
 
         const item_tags = {};
@@ -96,18 +103,20 @@ class AddItem extends React.Component {
             'tags': item_tags,
         }
 
-        console.log(this.imageInput.current.files[0]);
-        const file = this.imageInput.current.files[0];
+        if (this.imageInput.current.files[0] !== undefined) {
+            console.log(this.imageInput.current.files[0]);
+            const file = this.imageInput.current.files[0];
 
-        const storage = this.props.firebase.storage;
-        const image_url = 'item-images/' + item_name;
-        const image_ref = storage.ref().child(image_url);
+            const storage = this.props.firebase.storage;
+            const image_url = 'item-images/' + item_name;
+            const image_ref = storage.ref().child(image_url);
 
-        var metadata = { contentType: 'image/png' };
+            var metadata = { contentType: 'image/png' };
 
-        console.log(image_ref);
+            console.log(image_ref);
 
-        image_ref.put(file, metadata);
+            image_ref.put(file, metadata);
+        }
 
 
         const firestore = this.props.firebase.firestore;
@@ -118,7 +127,7 @@ class AddItem extends React.Component {
         const algolia = this.props.algolia.algolia_index;
         algolia.saveObjects([item], { autoGenerateObjectIDIfNotExist: true });
 
-
+        this.props.history.push(ROUTES.SEARCH);
 
     }
 
@@ -166,6 +175,8 @@ class AddItem extends React.Component {
                     <br />
                     <input type='submit' value='Submit'/>
                 </form>
+
+                <p>{this.state.error_state}</p>
             </div>
         );
     }
