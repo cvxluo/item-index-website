@@ -1,4 +1,13 @@
-.test {
-  display: flex;
-  flex-direction: row;
+.card: {
+  height: '100%';
+  display: 'flex';
+  flexDirection: 'column';
+}
+
+.cardContent: {
+  flexGrow: 1,
+}
+
+.cardMedia: {
+    paddingTop: '56.25%';
 }

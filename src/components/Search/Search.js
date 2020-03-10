@@ -11,6 +11,17 @@ import { withAlgolia } from '../backend/Algolia';
 
 import SearchBar from './SearchBar';
 
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+
+
+
 import * as ROUTES from '../../constants/routes';
 
 
@@ -104,26 +115,6 @@ class Search extends React.Component {
 
 
     render() {
-
-        const to_display = this.state.items_displayed;
-        const display_item_names = to_display.map(
-            (item, i) => {
-                return (
-                  <li key={i}>
-                    <Link to={{
-                        pathname:`${ROUTES.SEARCH}/${item['name']}`,
-                        state : {
-                            item_info : item,
-                        },
-                    }}>
-                    {item['name']}
-                    </Link>
-                  </li>
-                );
-            }
-        );
-
-
         return (
             <div>
                 <div>
@@ -144,9 +135,42 @@ class Search extends React.Component {
                             value={this.state.search_value}
                             />
                     </div>
-                    <ol>
-                        {display_item_names}
-                    </ol>
+                    <br />
+
+                    <Container maxWidth='lg'>
+                        <Grid container spacing={3}>
+                            {this.state.items_displayed.map(
+                                (item, i) => (
+                                    <Grid item key={item['name']} xs={12} sm={6} md={4} lg={2}>
+                                        <Card className='card'>
+                                            <CardActionArea>
+                                                <Link to={{
+                                                    pathname:`${ROUTES.SEARCH}/${item['name']}`,
+                                                    state : {
+                                                        item_info : item,
+                                                    },
+                                                }}>
+                                                    <CardMedia
+                                                        className='cardMedia'
+                                                        component='img'
+                                                        image='/image-placeholder.png'
+                                                        title={item['name']}
+                                                    />
+                                                    <CardContent className='cardContent'>
+                                                        <Typography>{item['name']}
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Link>
+
+                                            </CardActionArea>
+                                        </Card>
+                                    </Grid>
+                                )
+                            )}
+                        </Grid>
+
+                    </Container>
+
                 </div>
             </div>
 
