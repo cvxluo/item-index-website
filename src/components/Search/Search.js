@@ -19,6 +19,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
+
 
 
 
@@ -70,13 +72,38 @@ class Search extends React.Component {
         search_index.search(
             '',
             {
-                hitsPerPage: 1000,
+                hitsPerPage: 5,
             }
         ).then((responses) => {
             this.setState({
                 items_displayed: responses.hits,
             });
         });
+
+        const storage_index = this.props.firebase.storage;
+        const list_ref = storage_index.ref('item-images');
+
+        list_ref.listAll().then(
+            (res) => {
+                res.items.forEach(
+                    (itemRef) => {
+                        const itemRefName = itemRef.name;
+                        itemRef.getDownloadURL().then(
+                            (url) => {
+                                const new_items_with_images =
+                                {
+                                    ...this.state.items_with_images,
+                                    [itemRefName]: url,
+                                }
+                                this.setState({
+                                    items_with_images : new_items_with_images,
+                                })
+                            }
+                        )
+                    }
+                )
+            }
+        )
 
     }
 
@@ -86,6 +113,7 @@ class Search extends React.Component {
             search_value: "",
             items: {},
             items_displayed: [],
+            items_with_images: {},
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -101,7 +129,7 @@ class Search extends React.Component {
         search_index.search(
             event.target.value,
             {
-                hitsPerPage: 50,
+                hitsPerPage: 5,
             }
         ).then((responses) => {
             // Response from Algolia:
@@ -140,32 +168,81 @@ class Search extends React.Component {
                     <Container maxWidth='lg'>
                         <Grid container spacing={3}>
                             {this.state.items_displayed.map(
-                                (item, i) => (
-                                    <Grid item key={item['name']} xs={12} sm={6} md={4} lg={2}>
-                                        <Card className='card'>
-                                            <CardActionArea>
-                                                <Link to={{
-                                                    pathname:`${ROUTES.SEARCH}/${item['name']}`,
-                                                    state : {
-                                                        item_info : item,
-                                                    },
-                                                }}>
-                                                    <CardMedia
-                                                        className='cardMedia'
-                                                        component='img'
-                                                        image='/image-placeholder.png'
-                                                        title={item['name']}
-                                                    />
-                                                    <CardContent className='cardContent'>
-                                                        <Typography>{item['name']}
-                                                        </Typography>
-                                                    </CardContent>
-                                                </Link>
+                                (item, i) => {
 
-                                            </CardActionArea>
-                                        </Card>
-                                    </Grid>
-                                )
+                                    let media;
+                                    if (item['name'] in this.state.items_with_images) {
+                                        media =
+                                        <CardMedia
+                                            className='cardMedia'
+                                            component='img'
+                                            image={this.state.items_with_images[item['name']]}
+                                            title={item['name']}
+                                        />;
+                                    }
+                                    else {
+                                        media =
+                                        <CardMedia
+                                            className='cardMedia'
+                                            component='img'
+                                            image='/image-placeholder.png'
+                                            title={item['name']}
+                                        />;
+                                    }
+                                    {/*
+                                    this.props.firebase.storage.ref().child('item-images/' + item['name']).getDownloadURL().then(
+                                        (image_url) => {
+                                            console.log("GOT IMAGE");
+                                            media =
+                                            <CardMedia
+                                                className='cardMedia'
+                                                component='img'
+                                                image={image_url}
+                                                title={item['name']}
+                                            />;
+                                        }).catch(
+                                            (err) => {
+                                                media =
+                                                <CardMedia
+                                                    className='cardMedia'
+                                                    component='img'
+                                                    image='/image-placeholder.png'
+                                                    title={item['name']}
+                                                />;
+                                                console.log("ERROR: ", err.message);
+                                        }
+                                    );
+                                    */}
+
+
+                                    return (
+                                        <Grid item key={item['name']} xs={12} sm={6} md={4} lg={2}>
+                                            <Card className='card' varient='outlined'>
+                                                <CardActionArea>
+                                                    <Link to={{
+                                                        pathname:`${ROUTES.SEARCH}/${item['name']}`,
+                                                        state : {
+                                                            item_info : item,
+                                                        },
+                                                    }}>
+                                                        {media}
+                                                        <CardContent className='cardContent'>
+                                                            <Typography>{item['name']}
+                                                            </Typography>
+                                                        </CardContent>
+
+                                                    </Link>
+                                                    {/* Implement later, make sure prop forwarding works as expected
+                                                    <CardActions>
+                                                        <Button variant="contained" color="primary" component={Link} to={`${ROUTES.EDIT_ITEM}/${item['name']}`}> Edit </Button>
+                                                    </CardActions>
+                                                    */}
+
+                                                </CardActionArea>
+                                            </Card>
+                                        </Grid>
+                                    )
+                                }
                             )}
                         </Grid>
 
