@@ -3,10 +3,12 @@ import {
     Link,
     useParams,
 } from 'react-router-dom';
+import './ItemPage.css';
 
-import { withFirebase } from './backend/Firebase';
+import { withFirebase } from '../backend/Firebase';
 
-import * as ROUTES from '../constants/routes';
+import * as ROUTES from '../../constants/routes';
+
 
 class ItemPage extends React.Component {
 
@@ -62,26 +64,31 @@ class ItemPage extends React.Component {
         console.log(this.props.itemID);
 
 
+
         return (
             <div>
                 <Link to={ROUTES.SEARCH}>Back</Link>
 
-                <img
-                    src={this.state.image_url}
-                    alt={item_name}
-                    />
+                <div>
+                    <img
+                        src={this.state.image_url}
+                        alt={item_name}
+                        className='item-image'
+                        />
 
-                <p> { item_name } </p>
-                <Link to={{
-                    pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
-                    state : {
-                        item_info : this.props.item_info,
-                        item_imageURL: this.state.image_url,
-                    },
-                }}>Edit</Link>
-                <ol>
-                    {tag_display}
-                </ol>
+                    <p> { item_name } </p>
+                    <Link to={{
+                        pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
+                        state : {
+                            item_info : this.props.item_info,
+                            item_imageURL: this.state.image_url,
+                        },
+                    }}>Edit</Link>
+                    <ol>
+                        {tag_display}
+                    </ol>
+
+                </div>
             </div>
         );
     }

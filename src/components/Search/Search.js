@@ -9,8 +9,6 @@ import {
 import { withFirebase } from '../backend/Firebase';
 import { withAlgolia } from '../backend/Algolia';
 
-import SearchBar from './SearchBar';
-
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -21,7 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 
-
+import TextField from '@material-ui/core/TextField';
 
 
 import * as ROUTES from '../../constants/routes';
@@ -156,14 +154,18 @@ class Search extends React.Component {
                     </ul>
                 </div>
 
-                <div>
-                    <div className = "test">
-                        <SearchBar
-                            onChange={(e) => this.handleChange(e)}
-                            value={this.state.search_value}
-                            />
-                    </div>
-                    <br />
+                <div style={{ textAlign: 'center'}}>
+                    <TextField
+                       id='search-bar'
+                       style={{
+                           width: '75%',
+                           marginBottom: 50
+                       }}
+                       label="Search"
+                       value={this.state.search_value}
+                       onChange={this.handleChange}
+                       variant="filled"
+                     />
 
                     <Container maxWidth='lg'>
                         <Grid container spacing={3}>
@@ -219,7 +221,7 @@ class Search extends React.Component {
                                         <Grid item key={item['name']} xs={12} sm={6} md={4} lg={2}>
                                             <Card className='card' varient='outlined'>
                                                 <CardActionArea>
-                                                    <Link to={{
+                                                    <Link style={{ textDecoration: 'none' }} to={{
                                                         pathname:`${ROUTES.SEARCH}/${item['name']}`,
                                                         state : {
                                                             item_info : item,
@@ -227,8 +229,8 @@ class Search extends React.Component {
                                                     }}>
                                                         {media}
                                                         <CardContent className='cardContent'>
-                                                            <Typography>{item['name']}
-                                                            </Typography>
+                                                            <h2 align='center'>{item['name']}</h2>
+                                                             {/* <Typography varient='h1' align='center'>{item['name']}</Typography> */}
                                                         </CardContent>
 
                                                     </Link>
