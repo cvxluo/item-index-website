@@ -1,13 +1,13 @@
-.card: {
+.card {
   height: '100%';
   display: 'flex';
   flexDirection: 'column';
 }
 
-.cardContent: {
+.cardContent {
   flexGrow: 1,
 }
 
-.cardMedia: {
+.cardMedia {
     paddingTop: '56.25%';
 }

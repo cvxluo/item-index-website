@@ -219,7 +219,7 @@ class Search extends React.Component {
 
                                     return (
                                         <Grid item key={item['name']} xs={12} sm={6} md={4} lg={2}>
-                                            <Card className='card' varient='outlined'>
+                                            <Card className='card' variant='outlined'>
                                                 <CardActionArea>
                                                     <Link style={{ textDecoration: 'none' }} to={{
                                                         pathname:`${ROUTES.SEARCH}/${item['name']}`,
@@ -229,8 +229,8 @@ class Search extends React.Component {
                                                     }}>
                                                         {media}
                                                         <CardContent className='cardContent'>
-                                                            <h2 align='center'>{item['name']}</h2>
-                                                             {/* <Typography varient='h1' align='center'>{item['name']}</Typography> */}
+                                                            {/* <h2 align='center'>{item['name']}</h2> */}
+                                                            <Typography variant='h5' align='center'>{item['name']}</Typography>
                                                         </CardContent>
 
                                                     </Link>

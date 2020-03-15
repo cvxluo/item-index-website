@@ -5,6 +5,15 @@ import {
 } from 'react-router-dom';
 import './ItemPage.css';
 
+import Container from '@material-ui/core/Container';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
+
+
+
+
 import { withFirebase } from '../backend/Firebase';
 
 import * as ROUTES from '../../constants/routes';
@@ -49,9 +58,14 @@ class ItemPage extends React.Component {
         const tag_display = Object.keys(item_tags).map(
             (tag_type, i) => {
                 return (
-                    <li key={i}>
-                        <p>{tag_type} : {item_tags[tag_type]}</p>
-                    </li>
+                    <ListItem
+                        divider={true}
+                        classes={{
+                            root: 'centerListItem'
+                        }}
+                        >
+                        <ListItemText primary={tag_type} secondary={item_tags[tag_type]} />
+                    </ListItem>
                 );
             }
         );
@@ -69,24 +83,33 @@ class ItemPage extends React.Component {
             <div>
                 <Link to={ROUTES.SEARCH}>Back</Link>
 
-                <div>
+                <div className='center'>
                     <img
                         src={this.state.image_url}
                         alt={item_name}
                         className='item-image'
                         />
 
-                    <p> { item_name } </p>
-                    <Link to={{
+                    <Typography
+                        color='textPrimary'
+                        variant='h2'
+                        >
+                        { item_name }
+                    </Typography>
+
+                    <Link style={{ textDecoration: 'none' }}
+                        to={{
                         pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
                         state : {
                             item_info : this.props.item_info,
                             item_imageURL: this.state.image_url,
                         },
                     }}>Edit</Link>
-                    <ol>
+
+                    <List>
                         {tag_display}
-                    </ol>
+                    </List>
+
 
                 </div>
             </div>

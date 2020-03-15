@@ -1,7 +1,20 @@
-.center: {
-  text-align: 'center';
+.center {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
+.centerListItem {
+    text-align: center !important; 
+}
+
+
+
 .item-image {
-    width: 75%;
+    display: block;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
 }
