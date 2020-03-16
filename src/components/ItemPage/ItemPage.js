@@ -12,8 +12,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 
 
-
-
 import { withFirebase } from '../backend/Firebase';
 
 import * as ROUTES from '../../constants/routes';
@@ -63,6 +61,7 @@ class ItemPage extends React.Component {
                         classes={{
                             root: 'centerListItem'
                         }}
+                        key={i}
                         >
                         <ListItemText primary={tag_type} secondary={item_tags[tag_type]} />
                     </ListItem>

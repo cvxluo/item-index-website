@@ -1,9 +1,12 @@
 import React from 'react';
-
 import {
     Link,
     withRouter,
 } from 'react-router-dom';
+import './EditItem.css';
+
+import Typography from '@material-ui/core/Typography';
+
 
 import { withFirebase } from '../backend/Firebase';
 import { withAlgolia } from '../backend/Algolia';
@@ -95,6 +98,10 @@ class EditItem extends React.Component {
         const input_name = target.name;
         const tags = this.state.tags;
 
+        console.log("EDIT ITEM STATE:", this.state);
+        console.log(tags);
+        console.log("TAG INDEX:", tag_index);
+
         if (input_name === 'tag_type') {
             tags[tag_index]['type'] = target.value;
         }
@@ -180,20 +187,35 @@ class EditItem extends React.Component {
 
     render() {
 
+        console.log("IMAGE URL FOUND FROM EDIT:", this.state.url)
+
         return (
             <div>
                 <Link to={ROUTES.SEARCH}>Back</Link>
-                <p>Warning: your changes won't be saved</p>
+                    <Typography
+                        color='textPrimary'
+                        variant='overline'
+                        display='block'
+                        >
+                        Warning - if you leave now, your changes won't be saved
+                    </Typography>
 
-                <p>Changing: {this.state.item_name}</p>
 
-                <img
-                    src={this.state.url}
-                    alt={this.props.item_name}
-                    />
+                <div className='center'>
+                    <img
+                        src={this.state.url}
+                        alt={this.props.item_name}
+                        className='item-image'
+                        />
+                </div>
+
 
                 <label>
-                    Item image (please try to get this from the resource pack):
+                    <Typography
+                        variant='body1'
+                        >
+                        Replace image (please try to get this from the resource pack):
+                    </Typography>
                     <input
                         type='file'
                         ref={this.imageInput}
