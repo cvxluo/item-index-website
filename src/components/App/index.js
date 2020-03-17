@@ -8,7 +8,7 @@ import {
 import Home from '../Home';
 import Search from '../Search';
 import AddItem from '../AddItem';
-import ItemPage from '../ItemPage.js';
+import ItemPage from '../ItemPage';
 import EditItem from '../EditItem';
 
 import * as ROUTES from '../../constants/routes';

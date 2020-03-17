@@ -1,0 +1,30 @@
+.center {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.centerListItem {
+    text-align: center !important;
+}
+
+
+.itemImage {
+    display: block;
+    width: 60% !important;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
+}
+
+.addButton {
+    position: fixed !important;
+    margin: 0px;
+    top: auto;
+    right: 5%;
+    bottom: 5%;
+    height: 100px !important;
+    width: 100px !important;
+    left: auto;
+}

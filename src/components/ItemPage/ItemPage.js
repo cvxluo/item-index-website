@@ -3,10 +3,19 @@ import {
     Link,
     useParams,
 } from 'react-router-dom';
+import './ItemPage.css';
 
-import { withFirebase } from './backend/Firebase';
+import Container from '@material-ui/core/Container';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 
-import * as ROUTES from '../constants/routes';
+
+import { withFirebase } from '../backend/Firebase';
+
+import * as ROUTES from '../../constants/routes';
+
 
 class ItemPage extends React.Component {
 
@@ -47,9 +56,15 @@ class ItemPage extends React.Component {
         const tag_display = Object.keys(item_tags).map(
             (tag_type, i) => {
                 return (
-                    <li key={i}>
-                        <p>{tag_type} : {item_tags[tag_type]}</p>
-                    </li>
+                    <ListItem
+                        divider={true}
+                        classes={{
+                            root: 'centerListItem'
+                        }}
+                        key={i}
+                        >
+                        <ListItemText primary={tag_type} secondary={item_tags[tag_type]} />
+                    </ListItem>
                 );
             }
         );
@@ -62,26 +77,40 @@ class ItemPage extends React.Component {
         console.log(this.props.itemID);
 
 
+
         return (
             <div>
                 <Link to={ROUTES.SEARCH}>Back</Link>
 
-                <img
-                    src={this.state.image_url}
-                    alt={item_name}
-                    />
+                <div className='center'>
+                    <img
+                        src={this.state.image_url}
+                        alt={item_name}
+                        className='itemImage'
+                        />
 
-                <p> { item_name } </p>
-                <Link to={{
-                    pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
-                    state : {
-                        item_info : this.props.item_info,
-                        item_imageURL: this.state.image_url,
-                    },
-                }}>Edit</Link>
-                <ol>
-                    {tag_display}
-                </ol>
+                    <Typography
+                        color='textPrimary'
+                        variant='h2'
+                        >
+                        { item_name }
+                    </Typography>
+
+                    <Link style={{ textDecoration: 'none' }}
+                        to={{
+                        pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
+                        state : {
+                            item_info : this.props.item_info,
+                            item_imageURL: this.state.image_url,
+                        },
+                    }}>Edit</Link>
+
+                    <List>
+                        {tag_display}
+                    </List>
+
+
+                </div>
             </div>
         );
     }

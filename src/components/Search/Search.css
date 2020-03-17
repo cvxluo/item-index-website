@@ -1,4 +1,24 @@
-.test {
-  display: flex;
-  flex-direction: row;
+.card {
+  height: '100%';
+  display: 'flex';
+  flexDirection: 'column';
+}
+
+.cardContent {
+  flexGrow: 1,
+}
+
+.cardMedia {
+    padding-top: '56.25%';
+}
+
+.addButton {
+    position: fixed !important;
+    margin: 0px;
+    top: auto;
+    right: 5%;
+    bottom: 5%;
+    height: 100px !important;
+    width: 100px !important;
+    left: auto;
 }
