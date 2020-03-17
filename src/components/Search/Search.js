@@ -72,7 +72,7 @@ class Search extends React.Component {
         search_index.search(
             '',
             {
-                hitsPerPage: 5,
+                hitsPerPage: 30,
             }
         ).then((responses) => {
             this.setState({
@@ -129,7 +129,7 @@ class Search extends React.Component {
         search_index.search(
             event.target.value,
             {
-                hitsPerPage: 5,
+                hitsPerPage: 20,
             }
         ).then((responses) => {
             // Response from Algolia:
