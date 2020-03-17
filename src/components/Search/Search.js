@@ -18,6 +18,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+
 
 import TextField from '@material-ui/core/TextField';
 
@@ -143,16 +145,7 @@ class Search extends React.Component {
     render() {
         return (
             <div>
-                <div>
-                    <ul>
-                        <li>
-                            <Link to={ROUTES.HOME}>Home</Link>
-                        </li>
-                        <li>
-                            <Link to={ROUTES.ADD_ITEM}>Add item</Link>
-                        </li>
-                    </ul>
-                </div>
+                <Link to={ROUTES.HOME}>Home</Link>
 
                 <div style={{ textAlign: 'center'}}>
                     <TextField
@@ -230,7 +223,7 @@ class Search extends React.Component {
                                                         {media}
                                                         <CardContent className='cardContent'>
                                                             {/* <h2 align='center'>{item['name']}</h2> */}
-                                                            <Typography variant='h5' align='center'>{item['name']}</Typography>
+                                                            <Typography variant='subtitle1' align='center'>{item['name']}</Typography>
                                                         </CardContent>
 
                                                     </Link>
@@ -251,6 +244,16 @@ class Search extends React.Component {
                     </Container>
 
                 </div>
+
+                <Fab
+                    color='primary'
+                    aria-label='add'
+                    size='large'
+                    className='addButton'
+                    href={ROUTES.ADD_ITEM}
+                    >
+                    Add
+                </Fab>
             </div>
 
         );

@@ -86,7 +86,7 @@ class ItemPage extends React.Component {
                     <img
                         src={this.state.image_url}
                         alt={item_name}
-                        className='item-image'
+                        className='itemImage'
                         />
 
                     <Typography

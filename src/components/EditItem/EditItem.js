@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import './EditItem.css';
 
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 
@@ -222,20 +223,17 @@ class EditItem extends React.Component {
                         />
                 </label>
 
-                <form onSubmit={this.handleSubmit}>
 
-                    <TagInput
-                        tags={this.state.tags}
-                        handleTagChange={(e, i) => this.handleTagChange(e, i)}
-                        addTagSlot={this.addTagSlot}
-                        handleTagDelete={this.handleTagDelete}
-                        />
+                <TagInput
+                    tags={this.state.tags}
+                    handleTagChange={(e, i) => this.handleTagChange(e, i)}
+                    addTagSlot={this.addTagSlot}
+                    handleTagDelete={this.handleTagDelete}
+                    />
 
-                    <input type='submit' value='Submit'/>
-                    <br />
+                <Button variant='contained' onClick={this.handleSubmit}>Submit</Button>
 
-                    <button onClick={this.handleDelete}>{this.state.deleteDisplay}</button>
-                </form>
+                <Button onClick={this.handleDelete}>{this.state.deleteDisplay}</Button>
 
             </div>
         );

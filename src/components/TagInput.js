@@ -1,7 +1,11 @@
 import React from 'react'
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 
 function TagInput(props) {
@@ -13,7 +17,11 @@ function TagInput(props) {
         (tag, i) => {
             console.log("TAG I:", i);
             return (
-                <li key={i}>
+                <ListItem
+                    divider='true'
+                    alignItems='center'
+                    key={i}
+                    >
                     <TextField
                         name='tag_type'
                         value={tag['type']}
@@ -30,16 +38,15 @@ function TagInput(props) {
 
                     <button type='button' onClick={(e) => props.handleTagDelete(e, i)}>Delete</button>
 
-
-                </li>
+                </ListItem>
             );
         }
     );
 
 
     return (
-        <div>
-            <p> Tags (Type of tag : attribute): </p>
+        <div className='center'>
+            <Typography variant='h6'> Tags (Type of tag : attribute): </Typography>
             <Button
                 variant='contained'
                 color='primary'
@@ -47,9 +54,9 @@ function TagInput(props) {
                 >
                 Add another tag!
             </Button>
-            <ol>
+            <List>
                 {tag_boxes}
-            </ol>
+            </List>
         </div>
     );
 }
