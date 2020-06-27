@@ -40,19 +40,42 @@ class ItemPage extends React.Component {
 
             }
         );
+
+        this.setState({ itemID: this.props.itemID })
+
+        console.log("SECOND PROPS CHECK");
+        console.log(this.props.itemID);
+        console.log(this.props.item_info);
+        if (!this.props.item_info) {
+            const firestore = this.props.firebase.firestore;
+            const item_ref = firestore.collection('items').doc(this.props.itemID);
+            item_ref.get().then((doc) => {
+                this.setState({ item_tags : doc.data()['tags'] })
+                console.log()
+            })
+        }
+
+        else {
+            this.setState({
+                item_tags : this.props.item_info['tags']
+            })
+        }
     }
 
     constructor(props) {
         super(props);
         this.state = {
             image_url: '',
+            itemID: '',
+            item_tags: {},
         }
     }
 
     render() {
+        const item_name = this.state.itemID;
+        const item_tags = this.state.item_tags;
 
-        const item_name = this.props.itemID;
-        const item_tags = this.props.item_info['tags'];
+        console.log(this.state);
         const tag_display = Object.keys(item_tags).map(
             (tag_type, i) => {
                 return (
@@ -68,14 +91,6 @@ class ItemPage extends React.Component {
                 );
             }
         );
-
-        console.log("PROPS ", this.props);
-        console.log(this.props.item_info);
-
-
-        console.log("IN ITEM PAGE");
-        console.log(this.props.itemID);
-
 
 
         return (
@@ -123,14 +138,24 @@ const ItemPageBackend = withFirebase(ItemPage);
 function ItemPageRouter(props) {
 
     const { itemID } = useParams();
-    const { item_info } = props.location.state;
+    if (props.location.state) {
+        const { item_info } = props.location.state;
+        return (
+            <ItemPageBackend
+                itemID={itemID}
+                item_info={item_info}
+                />
+        );
+    }
 
-    return (
-        <ItemPageBackend
-            itemID={itemID}
-            item_info={item_info}
-            />
-    );
+    else {
+        return (
+            <ItemPageBackend
+                itemID={itemID}
+                item_info={""}
+                />
+        );
+    }
 
 }
 
