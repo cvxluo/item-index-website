@@ -81,13 +81,14 @@ class Search extends React.Component {
         });
 
         const storage_index = this.props.firebase.storage;
-        const list_ref = storage_index.ref('item-images');
+        const list_ref = storage_index.ref().child('item-images');
 
         list_ref.listAll().then(
             (res) => {
                 res.items.forEach(
                     (itemRef) => {
                         const itemRefName = itemRef.name;
+                        console.log(itemRefName);
                         itemRef.getDownloadURL().then(
                             (url) => {
                                 const new_items_with_images =
@@ -105,7 +106,11 @@ class Search extends React.Component {
             }
         )
 
+        console.log("ITEMS WITH IMAGES");
+        console.log(this.state.items_with_images);
+
     }
+
 
     constructor(props) {
         super(props);
