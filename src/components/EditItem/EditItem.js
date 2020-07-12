@@ -60,6 +60,7 @@ class EditItem extends React.Component {
             );
             this.setState({
                 tags : item_tags,
+                objectID : doc.data()['objectID']
             })
 
             console.log("ITEM TAGS ", item_tags);
@@ -83,7 +84,7 @@ class EditItem extends React.Component {
             item_name : '',
             url: '',
 
-            objectID : 12345, // Deletion won't work right now, because the previous method relied on getting objectID from history
+            objectID : 0, // Deletion won't work right now, because the previous method relied on getting objectID from history
             deleteDisplay: 'Delete',
 
             // Tags are structured as dicts inside a list - each dict contains the type and attribute of a tag
