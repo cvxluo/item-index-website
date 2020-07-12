@@ -220,10 +220,7 @@ class Search extends React.Component {
                                             <Card className='card' variant='outlined'>
                                                 <CardActionArea>
                                                     <Link style={{ textDecoration: 'none' }} to={{
-                                                        pathname:`${ROUTES.SEARCH}/${item['name']}`,
-                                                        state : {
-                                                            item_info : item,
-                                                        },
+                                                        pathname:`${ROUTES.SEARCH}/${item['name']}`
                                                     }}>
                                                         {media}
                                                         <CardContent className='cardContent'>

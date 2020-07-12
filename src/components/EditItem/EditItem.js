@@ -2,6 +2,7 @@ import React from 'react';
 import {
     Link,
     withRouter,
+    useParams,
 } from 'react-router-dom';
 import './EditItem.css';
 
@@ -19,33 +20,74 @@ import * as ROUTES from '../../constants/routes';
 
 class EditItem extends React.Component {
 
+    componentDidMount() {
+        console.log("COMPONENT MOUNTING");
+
+        const itemID = this.props.itemID;
+
+        const storage = this.props.firebase.storage;
+        const url = 'item-images/' + itemID;
+        const image_ref = storage.ref().child(url);
+
+        image_ref.getDownloadURL().then(
+            (url) => {
+                this.setState({
+                    url : url,
+                });
+            }
+        ).catch(
+            (err) => {
+                console.log("Item has no image");
+                this.setState({
+                    url : '/image-placeholder.png',
+                });
+            }
+        );
+
+
+        // Calling Firebase for the item's info
+        const firestore = this.props.firebase.firestore;
+        const item_ref = firestore.collection('items').doc(this.props.itemID);
+        item_ref.get().then((doc) => {
+            const tag_data = doc.data()['tags'];
+            const item_tags = Object.keys(tag_data).map(
+                (tag_type) => {
+                    return {
+                        'type': tag_type,
+                        'attribute': tag_data[tag_type],
+                    }
+                }
+            );
+            this.setState({
+                tags : item_tags,
+            })
+
+            console.log("ITEM TAGS ", item_tags);
+        });
+
+
+
+        this.setState({
+            item_name: this.props.itemID,
+        })
+
+        console.log(this.state);
+        
+    }
+
+
     constructor(props) {
         super(props);
 
-        const item_info = props.location.state.item_info;
-        const item_imageURL = props.location.state.item_imageURL;
-
-        console.log(item_info);
-
-        const item_tags = Object.keys(item_info['tags']).map(
-            (tag_type) => {
-                return {
-                    'type': tag_type,
-                    'attribute': item_info['tags'][tag_type],
-                }
-            }
-        )
-        console.log("ITEM TAGS ", item_tags);
-
         this.state = {
-            item_name : item_info['name'],
-            url: item_imageURL,
+            item_name : '',
+            url: '',
 
-            objectID : item_info['objectID'],
+            objectID : 12345, // Deletion won't work right now, because the previous method relied on getting objectID from history
             deleteDisplay: 'Delete',
 
             // Tags are structured as dicts inside a list - each dict contains the type and attribute of a tag
-            tags : item_tags,
+            tags : [],
         };
 
         this.imageInput = React.createRef();
@@ -248,4 +290,16 @@ class EditItem extends React.Component {
 
 const EditItemPage = withRouter(withFirebase(withAlgolia(EditItem)));
 
-export default EditItemPage;
+
+function EditPageRouter(props) {
+
+    const { itemID } = useParams();
+    return (
+        <EditItemPage
+            itemID={itemID}
+        />
+    );
+
+}
+
+export default EditPageRouter;
