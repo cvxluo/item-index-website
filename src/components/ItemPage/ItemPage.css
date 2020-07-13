@@ -9,6 +9,10 @@
     text-align: center !important;
 }
 
+.secondary-multiline {
+    white-space: pre-line;
+}
+
 
 .itemImage {
     display: block;

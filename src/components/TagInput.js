@@ -27,6 +27,7 @@ function TagInput(props) {
                         value={tag['type']}
                         onChange={(e) => props.handleTagChange(e, i)}
                         style={{ margin: 5 }}
+                        multiline
                         />
 
                     <TextField
@@ -34,6 +35,7 @@ function TagInput(props) {
                         value={tag['attribute']}
                         onChange={(e) => props.handleTagChange(e, i)}
                         style={{ margin: 5 }}
+                        multiline
                         />
 
                     <button type='button' onClick={(e) => props.handleTagDelete(e, i)}>Delete</button>
