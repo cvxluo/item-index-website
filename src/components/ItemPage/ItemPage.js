@@ -68,6 +68,7 @@ class ItemPage extends React.Component {
         console.log(this.state);
         const tag_display = Object.keys(item_tags).map(
             (tag_type, i) => {
+                console.log("TAG SECONDARY: ", item_tags[tag_type]);
                 return (
                     <ListItem
                         divider={true}
@@ -76,7 +77,13 @@ class ItemPage extends React.Component {
                         }}
                         key={i}
                         >
-                        <ListItemText primary={tag_type} secondary={item_tags[tag_type]} />
+                        <ListItemText 
+                            primary={tag_type} 
+                            secondary={item_tags[tag_type]} 
+                            classes={{
+                                secondary: 'secondary-multiline'
+                            }}
+                        />
                     </ListItem>
                 );
             }
