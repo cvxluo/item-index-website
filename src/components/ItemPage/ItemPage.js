@@ -42,24 +42,14 @@ class ItemPage extends React.Component {
         );
 
         this.setState({ itemID: this.props.itemID })
+        
+        // Calling Firebase for the item's info
+        const firestore = this.props.firebase.firestore;
+        const item_ref = firestore.collection('items').doc(this.props.itemID);
+        item_ref.get().then((doc) => {
+            this.setState({ item_tags : doc.data()['tags'] })
+        });
 
-        console.log("SECOND PROPS CHECK");
-        console.log(this.props.itemID);
-        console.log(this.props.item_info);
-        if (!this.props.item_info) {
-            const firestore = this.props.firebase.firestore;
-            const item_ref = firestore.collection('items').doc(this.props.itemID);
-            item_ref.get().then((doc) => {
-                this.setState({ item_tags : doc.data()['tags'] })
-                console.log()
-            })
-        }
-
-        else {
-            this.setState({
-                item_tags : this.props.item_info['tags']
-            })
-        }
     }
 
     constructor(props) {
@@ -78,6 +68,7 @@ class ItemPage extends React.Component {
         console.log(this.state);
         const tag_display = Object.keys(item_tags).map(
             (tag_type, i) => {
+                console.log("TAG SECONDARY: ", item_tags[tag_type]);
                 return (
                     <ListItem
                         divider={true}
@@ -86,7 +77,13 @@ class ItemPage extends React.Component {
                         }}
                         key={i}
                         >
-                        <ListItemText primary={tag_type} secondary={item_tags[tag_type]} />
+                        <ListItemText 
+                            primary={tag_type} 
+                            secondary={item_tags[tag_type]} 
+                            classes={{
+                                secondary: 'secondary-multiline'
+                            }}
+                        />
                     </ListItem>
                 );
             }
@@ -114,10 +111,6 @@ class ItemPage extends React.Component {
                     <Link style={{ textDecoration: 'none' }}
                         to={{
                         pathname:`${ROUTES.EDIT_ITEM}/${item_name}`,
-                        state : {
-                            item_info : this.props.item_info,
-                            item_imageURL: this.state.image_url,
-                        },
                     }}>Edit</Link>
 
                     <List>
@@ -138,24 +131,11 @@ const ItemPageBackend = withFirebase(ItemPage);
 function ItemPageRouter(props) {
 
     const { itemID } = useParams();
-    if (props.location.state) {
-        const { item_info } = props.location.state;
-        return (
-            <ItemPageBackend
-                itemID={itemID}
-                item_info={item_info}
-                />
-        );
-    }
-
-    else {
-        return (
-            <ItemPageBackend
-                itemID={itemID}
-                item_info={""}
-                />
-        );
-    }
+    return (
+        <ItemPageBackend
+            itemID={itemID}
+        />
+    );
 
 }
 

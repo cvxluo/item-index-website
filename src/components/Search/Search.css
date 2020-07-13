@@ -1,11 +1,11 @@
 .card {
   height: '100%';
   display: 'flex';
-  flexDirection: 'column';
+  flex-direction: 'column';
 }
 
 .cardContent {
-  flexGrow: 1,
+  flex-grow: 1,
 }
 
 .cardMedia {
